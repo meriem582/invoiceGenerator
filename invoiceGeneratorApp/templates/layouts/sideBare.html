@@ -1,0 +1,36 @@
+{%load static%}
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar navbar-dark" style="background-color: #003366;">
+        <a href="index.html" class="navbar-brand mx-4 mb-3">
+        </a>
+       
+        <div class="navbar-nav w-100">
+            <a href="{%url 'dashBoard'%}" class="nav-item nav-link {% if request.resolver_match.url_name == 'dashBoard' %}active{% endif %}">
+                <i class="fa fa-tachometer-alt me-2"></i>Home
+            </a>
+
+            <a href="{%url 'product'%}" class="nav-item nav-link {% if request.resolver_match.url_name == 'product' %}active{% endif %}">
+                <i class="fa fa-th me-2"></i>Product
+            </a>
+            
+            <a href="{%url 'invoice'%}" class="nav-item nav-link {% if request.resolver_match.url_name == 'invoice' %}active{% endif %}">
+                <i class="fa fa-keyboard me-2"></i>Invoice
+            </a>
+        </div>
+    </nav>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUrl = window.location.pathname.split('/').filter(Boolean).pop() || '';
+    document.querySelectorAll('.nav-link').forEach(link => {
+        // Extraire le dernier segment de l'URL du lien
+        const linkUrl = new URL(link.href).pathname.split('/').filter(Boolean).pop() || '';
+        
+        // Comparer uniquement les derniers segments significatifs
+        if (linkUrl === currentUrl) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>

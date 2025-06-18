@@ -1,0 +1,123 @@
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0" style="font-size: 1.5rem; font-weight: bold;">List of invoices</h6>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">ID</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Total price</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for p in page_content%}
+                    <tr>
+                        <td>{{p.id}}</td>
+                        <td>{{p.date_created}}</td>
+                        <td>{{p.get_total}} €</td>
+                        <td>
+                            <a href="deleteInvoice/{{p.id}}"><i class="fa fa-trash btn-primary"></i></a>
+                            &nbsp;
+                            &nbsp;
+                            <a href="#" class="view-invoice" data-invoice-id="{{p.id}}" data-bs-toggle="modal" data-bs-target="#detailinvoiceModal"> <i class="fa fa-eye btn-primary"></i></a>
+                            &nbsp;
+                            &nbsp;
+                            <a href="download_pdf/{{p.id}}" > <i class="fa fa-download btn-primary"></i></a>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+
+        {%include 'layouts/paginator.html'%}
+
+        <div class="modal fade" id="detailinvoiceModal" tabindex="-1" aria-labelledby="detailinvoiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-secondary text-center rounded p-4">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailinvoiceModalLabel">Invoice details #<span id="invoiceId"></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                                <thead>
+                                    <tr class="text-white">
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceDetailsBody">
+                                </tbody>
+                                <tfoot>
+                                    <tr class="text-white">
+                                        <td colspan="3" class="text-end"><strong>Total :</strong></td>
+                                        <td id="invoiceTotal">0.00 $</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du clic sur le bouton "Voir"
+    document.querySelectorAll('.view-invoice').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const invoiceId = this.getAttribute('data-invoice-id');
+            document.getElementById('invoiceId').textContent = invoiceId;
+            
+            // Requête AJAX pour récupérer les détails
+            fetch(`/invoice_details/${invoiceId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tbody = document.getElementById('invoiceDetailsBody');
+                    tbody.innerHTML = '';
+                    let totalGeneral = 0;
+                    
+                    data.items.forEach(item => {
+                        const row = document.createElement('tr');
+                        const total = item.price * item.quantity;
+                        totalGeneral += total;
+                        
+                        row.innerHTML = `
+                            <td>${item.product_name}</td>
+                            <td>${item.price.toFixed(2)} €</td>
+                            <td>${item.quantity}</td>
+                            <td>${total.toFixed(2)} €</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    document.getElementById('invoiceTotal').textContent = totalGeneral.toFixed(2) + ' €';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching invoice details. Please try again later.');
+                });
+        });
+    });
+});
+</script>

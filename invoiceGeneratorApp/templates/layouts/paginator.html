@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-between align-items-center mt-4 ">
+    <div class="text-muted">
+        Showing <span class="fw-bold">{{ page_content.start_index }}</span> to <span class="fw-bold">{{ page_content.end_index }}</span> 
+        of <span class="fw-bold">{{ page_content.paginator.count }}</span> items
+    </div>
+    
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm mb-0">
+            {% if page_content.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" style="color: #003366;" href="?page=1" aria-label="Première" title="Première page">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" style="color: #003366;"href="?page={{ page_content.previous_page_number }}" aria-label="Précédente" title="Page précédente">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            {% for num in page_content.paginator.page_range %}
+                {% if num == page_content.number %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > page_content.number|add:'-3' and num < page_content.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" style="color: #003366;" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% elif num == 1 or num == page_content.paginator.num_pages %}
+                    <li class="page-item">
+                        <a class="page-link" style="color: #003366;" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% elif num == page_content.number|add:'-3' or num == page_content.number|add:'3' %}
+                    <li class="page-item disabled" style="color: #003366;">
+                        <span class="page-link ">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_content.has_next %}
+                <li class="page-item">
+                    <a class="page-link" style="color: #003366;" href="?page={{ page_content.next_page_number }}" aria-label="Suivante" title="Page suivante">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" >
+                    <a class="page-link" style="color: #003366;" href="?page={{ page_content.paginator.num_pages }}" aria-label="Dernière" title="Dernière page">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="d-flex align-items-center">
+        <span class="me-2 text-muted">Par page:</span>
+        <select class="form-select form-select-sm" style="width: 70px; background-color: #003366; color : white" onchange="window.location.href='?page=1&per_page='+this.value">
+            <option value="15" {% if per_page == 15 %}selected{% endif %}>15</option>
+            <option value="30" {% if per_page == 30 %}selected{% endif %}>30</option>
+            <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+        </select>
+    </div>
+</div>

@@ -1,0 +1,496 @@
+/********** Template CSS **********/
+:root {
+    --primary: #003366;
+    --primary: #011c0f;
+    --primary: #04301b;
+    --primary: #08532f;
+    --primary: #0f663c;
+    --primary: #119555;
+    --primary: #87ceeb;
+    --blue: #87ceeb;
+    --secondary: #003366;
+    --light: #6C7293;
+    --dark: #c0c0c0;
+    --white: #fdfdfd;
+}
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 45px;
+    bottom: 45px;
+    z-index: 99;
+}
+
+
+.text-primary {
+    color: black !important;
+}
+
+
+.text-primary2 {
+    color : #fdfdfd;
+}
+
+/*** Spinner ***/
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/*** Button ***/
+.btn {
+    transition: .5s;
+}
+
+.btn-text {
+    color: white;
+}
+.btn-square {
+    width: 38px;
+    height: 38px;
+}
+
+.btn-sm-square {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-lg-square {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-square,
+.btn-sm-square,
+.btn-lg-square {
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    border-radius: 50px;
+}
+
+
+/*** Layout ***/
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #003366 90%, #323232);
+    transition: 0.5s;
+    z-index: 999;
+}
+
+.content {
+    margin-left: 250px;
+    min-height: 100vh;
+    background: #fdfdfd;
+    transition: 0.5s;
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        margin-left: 0;
+    }
+
+    .sidebar.open {
+        margin-left: -250px;
+    }
+
+    .content {
+        width: calc(100% - 250px);
+    }
+
+    .content.open {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+
+    .sidebar.open {
+        margin-left: 0;
+    }
+
+    .content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+
+/*** Navbar ***/
+.sidebar .navbar .navbar-nav .nav-link {
+    padding: 7px 20px;
+    color: var(--white);
+    font-weight: 500;
+    /*border-left: 3px solid var(--primary);*/
+    border-left: 3px solid  #87CEEB;
+    border-radius: 0 30px 30px 0;
+    outline: none;
+}
+
+.sidebar .navbar .navbar-nav .nav-link:hover,
+.sidebar .navbar .navbar-nav .nav-link.active {
+    color: var(--secondary);
+    background: var(--white);
+    border-color: var(--primary);
+}
+
+.sidebar .navbar .navbar-nav .nav-link i {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /*background: var(--dark);*/
+    background: linear-gradient(to right, #003366, #87CEEB);
+    border-radius: 40px;
+}
+
+.sidebar .navbar .navbar-nav .nav-link:hover i,
+.sidebar .navbar .navbar-nav .nav-link.active i {
+    background: var(--blue);
+}
+
+.sidebar .navbar .dropdown-toggle::after {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    transition: .5s;
+}
+
+.sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
+    transform: rotate(-180deg);
+}
+
+.sidebar .navbar .dropdown-item {
+    padding-left: 25px;
+    border-radius: 0 30px 30px 0;
+    color: var(--light);
+}
+
+.sidebar .navbar .dropdown-item:hover,
+.sidebar .navbar .dropdown-item.active {
+    background: var(--dark);
+}
+
+.content .navbar .navbar-nav .nav-link {
+    margin-left: 25px;
+    padding: 12px 0;
+    color: #003366;
+    outline: none;
+}
+
+.content .navbar .navbar-nav .nav-link:hover,
+.content .navbar .navbar-nav .nav-link.active {
+    color: var(--primary);
+}
+
+.content .navbar ,
+.content .navbar .navbar-nav .nav-link i {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* background: var(--dark); */
+    border-radius: 40px;
+}
+
+.sidebar-toggler {
+    padding: 10px;
+    margin-left: 25px;
+    margin-top: 20px;
+    z-index: 999;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 20%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.content .navbar .dropdown-item {
+    color: var(--light);
+}
+
+.content .navbar .dropdown-item:hover,
+.content .navbar .dropdown-item.active {
+    background: var(--dark);
+}
+
+.content .navbar .dropdown-toggle::after {
+    margin-left: 6px;
+    vertical-align: middle;
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    transition: .5s;
+}
+
+.content .navbar .dropdown-toggle[aria-expanded=true]::after {
+    transform: rotate(-180deg);
+}
+
+@media (max-width: 575.98px) {
+    .content .navbar .navbar-nav .nav-link {
+        margin-left: 15px;
+    }
+}
+
+
+/*** Date Picker ***/
+.bootstrap-datetimepicker-widget.bottom {
+    top: auto !important;
+}
+
+.bootstrap-datetimepicker-widget .table * {
+    border-bottom-width: 0px;
+}
+
+.bootstrap-datetimepicker-widget .table th {
+    font-weight: 500;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+    background: var(--primary);
+}
+
+.bootstrap-datetimepicker-widget table td.today::before {
+    border-bottom-color: var(--primary);
+}
+
+
+/*** Testimonial ***/
+.progress .progress-bar {
+    width: 0px;
+    transition: 2s;
+}
+
+
+/*** Testimonial ***/
+.testimonial-carousel .owl-dots {
+    margin-top: 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.testimonial-carousel .owl-dot {
+    position: relative;
+    display: inline-block;
+    margin: 0 5px;
+    width: 15px;
+    height: 15px;
+    border: 5px solid var(--primary);
+    border-radius: 15px;
+    transition: .5s;
+}
+
+.testimonial-carousel .owl-dot.active {
+    background: var(--dark);
+    border-color: var(--primary);
+}
+
+.form-control:focus {
+    background-color: #C0C0C0; 
+    border-color: #003366; /* Ou n'importe quelle nuance de bleu que vous préférez */
+    box-shadow: 0 0 0 0.05rem #003366; /* Optionnel: ajoute une ombre pour un effet plus prononcé */
+}
+
+
+.form-check-input{
+    background-color: #C0C0C0;
+}
+
+
+/* Ajoutés  */
+
+/* Tableaux  */
+
+/* Début  */
+
+.table2 {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #fff5;
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: .8rem;
+
+    overflow: hidden;
+}
+
+.table_body {
+    width: 100%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+
+    margin: .8rem auto;
+    border-radius: .6rem;
+
+    overflow: auto;
+    overflow: overlay;
+}
+
+.table_body::-webkit-scrollbar{
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.table_body::-webkit-scrollbar-thumb{
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table_body:hover::-webkit-scrollbar-thumb{ 
+    visibility: visible;
+}
+
+
+table, th, td {
+    border-collapse: collapse;
+    padding: 1rem;
+    text-align: left;
+}
+
+
+thead th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: rgba(135, 206, 235, 0.4);
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;
+}
+
+tbody tr {
+    --delay: .1s;
+    transition: .5s ease-in-out var(--delay), background-color 0s;   
+    transition: background-color 0.3s ease;
+
+}
+
+tbody tr.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+tbody tr:hover {
+    box-shadow: inset 0 0 10px rgba(175, 220, 245, 1);
+}
+
+tbody tr td{
+    transition: .2s ease-in-out;
+}
+
+tbody tr.hide td{
+    padding: 0;
+    font: 0 / 0 sans-serif;
+    transition: .2s ease-in-out .5s;
+    /* transition: background-color 0.3s ease; */
+
+}
+
+thead th:hover {
+    color: #6c00bd;
+}
+
+/* Fin  */
+
+
+.logo-circulaire{
+    width: 50%;
+    display: block; /* Assure que l'image est centrée correctement si son conteneur permet le centrage */
+    margin: -7px auto; /* Centre l'image horizontalement */
+    margin-left: 67px;
+    /* margin-bottom: 0px; */
+    border-radius: 50%; /* Rend l'image parfaitement circulaire */
+    border: 3px solid black; /* Ajoute une bordure noire autour de l'image */
+}
+
+a {
+    color: #003366; /* Liens en bleu */
+}
+
+a:hover {
+    color: #0544a3; /* Bleu plus foncé au survol */
+}
+
+/* Style de base */
+.sidebar {
+    width: 250px;
+    transition: all 0.3s;
+}
+
+.content {
+    margin-left: 250px;
+    transition: all 0.3s;
+}
+
+/* Quand la sidebar est fermée */
+.sidebar.open {
+    margin-left: -250px;
+}
+
+.content.open {
+    margin-left: 0;
+}
+
+/* Pour les petits écrans */
+@media (max-width: 992px) {
+    .sidebar {
+        margin-left: -250px;
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+    }
+    
+    .sidebar.open {
+        margin-left: 0;
+    }
+    
+    .content {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,229 @@
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0" style="font-size: 1.5rem; font-weight: bold;">List of products</h6>
+           
+        </div>
+        <div style="text-align: right;">
+         <br>
+             <button type="button" class="btn btn-text" style="background-color: #003366;" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                Generate invoice
+            </button>
+            <button type="button" class="btn btn-text" data-bs-toggle="modal" style="background-color: #003366;" data-bs-target="#exampleModal">
+                Add a product
+            </button>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col"></th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Expiration date</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in page_content %}
+                    <tr>
+                        <td><input class="form-check-input product-checkbox" type="checkbox" data-product-id="{{p.id}}"></td>
+                        <td>{{p.id}}</td>
+                        <td>{{p.name}}</td>
+                        <td>{{p.price}}</td>
+                        <td>{{p.expiration_date}}</td>
+                        
+                        <td>
+                            <a href="deleteProduct/{{p.id}}"><i class="fa fa-trash btn-primary"></i></a>
+                            &nbsp;
+                            &nbsp;
+                            <a href="edit/{{p.id}}"><i class="fa fa-edit btn-primary"></i></a>
+                        </td>
+                        <td>
+                            <input  type="number" class="quantity-cell form-control quantity-input" min="1" value="1" style="width: 70px; display: none; background-color: #f0f0f0;">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {%include 'layouts/paginator.html'%}
+
+        <!-- Info sur la pagination -->
+        <div class="text-center text-white">
+            Page {{ page_content.number }} of {{ page_content.paginator.num_pages }} - {{ page_content.paginator.count }} Total products
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-secondary text-center rounded p-4">
+                    <form action="AddProduct/" method="post">
+                        {%csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="text-align: left;">
+
+                            <div class="mb-3">
+                                <label for="exampleInput" class="form-label">name</label>
+                                <input type="text" style="background-color: white;" class="form-control" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInput" class="form-label">price</label>
+                                <input type="number" style="background-color: white;" class="form-control" name="price" min="0.01" step="0.01" required>
+                                
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInput" class="form-label">Expiration date</label>
+                                <input type="date" style="background-color: white;" class="form-control" name="expiration_date">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" style="background-color: #003366; color: white" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pour créer une facture -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-secondary text-center rounded p-4">
+                    <form id="invoiceForm" method="post" action="{% url 'generateInvoice' %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Generate invoice</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="text-align: left;">
+                            <div id="selectedProductsList">
+                            </div>
+                            <div id="noProductsMessage" style="display: none;">
+                                <p class="text-white">No products selected</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" style="background-color: #003366; color: white;">Generate invoice</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion des checkbox
+    const checkboxes = document.querySelectorAll('.product-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            const quantityInput = row.querySelector('.quantity-input');
+            
+            if (this.checked) {
+                quantityInput.style.display = 'block';
+            } else {
+                quantityInput.style.display = 'none';
+                quantityInput.value = 1; // Reset quantity
+            }
+        });
+    });
+    
+    // Gestion du bouton "Generate invoice"
+    document.querySelector('[data-bs-target="#exampleModal2"]').addEventListener('click', function() {
+        const selectedProductsList = document.getElementById('selectedProductsList');
+        const noProductsMessage = document.getElementById('noProductsMessage');
+        selectedProductsList.innerHTML = '';
+        
+        const selectedProducts = [];
+        
+        document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const productId = checkbox.dataset.productId;
+            const productName = row.querySelector('td:nth-child(3)').textContent;
+            const productPrice = row.querySelector('td:nth-child(4)').textContent;
+            const quantity = row.querySelector('.quantity-input').value;
+            
+            selectedProducts.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                quantity: quantity
+            });
+        });
+        
+        if (selectedProducts.length === 0) {
+            selectedProductsList.style.display = 'none';
+            noProductsMessage.style.display = 'block';
+        } else {
+            selectedProductsList.style.display = 'block';
+            noProductsMessage.style.display = 'none';
+            
+            // Créer un élément caché pour chaque produit sélectionné
+            selectedProducts.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'selected-product mb-3 p-2 rounded';
+                
+                productDiv.innerHTML = `
+                    <h6 class="text-white">${product.name}</h6>
+                    <p class="text-white">Price: $${product.price} | Quantity: ${product.quantity}</p>
+                    <input type="hidden" name="products[]" value='${JSON.stringify(product)}'>
+                `;
+                selectedProductsList.appendChild(productDiv);
+            });
+        }
+    });
+    
+    // Soumission du formulaire de facture
+    document.getElementById('invoiceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const selectedProducts = [];
+        
+        document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const productId = checkbox.dataset.productId;
+            const quantity = row.querySelector('.quantity-input').value;
+            
+            selectedProducts.push({
+                product_id: productId,
+                quantity: parseInt(quantity)
+            });
+        });
+        
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: JSON.stringify({
+                products: selectedProducts,
+                csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.invoice_url || window.location.href;
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error occurred'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while generating the invoice');
+        });
+    });
+    });
+</script>
