@@ -53,7 +53,7 @@
                     <form action="EditProduct/" method="post">
                         {%csrf_token %}
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Mise à jour du produit</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Edit produit</h5>
                             <input type="hidden" value="{{product.id}}" name="id">
                         </div>
                         <div class="modal-body" style="text-align: left;">
